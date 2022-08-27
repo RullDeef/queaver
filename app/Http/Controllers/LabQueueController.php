@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreQueueRequest;
-use App\Http\Requests\UpdateQueueRequest;
-use App\Models\Queue;
+use App\Http\Requests\StoreLabQueueRequest;
+use App\Http\Requests\UpdateLabQueueRequest;
+use App\Models\LabQueue;
 
-class QueueController extends Controller
+class LabQueueController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,10 +31,10 @@ class QueueController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreQueueRequest  $request
+     * @param  \App\Http\Requests\StoreLabQueueRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreQueueRequest $request)
+    public function store(StoreLabQueueRequest $request)
     {
         //
     }
@@ -42,10 +42,10 @@ class QueueController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Queue  $queue
+     * @param  \App\Models\LabQueue  $queue
      * @return \Illuminate\Http\Response
      */
-    public function show(Queue $queue)
+    public function show(LabQueue $queue)
     {
         //
     }
@@ -53,10 +53,10 @@ class QueueController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Queue  $queue
+     * @param  \App\Models\LabQueue  $queue
      * @return \Illuminate\Http\Response
      */
-    public function edit(Queue $queue)
+    public function edit(LabQueue $queue)
     {
         //
     }
@@ -64,11 +64,11 @@ class QueueController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateQueueRequest  $request
-     * @param  \App\Models\Queue  $queue
+     * @param  \App\Http\Requests\UpdateLabQueueRequest  $request
+     * @param  \App\Models\LabQueue  $queue
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateQueueRequest $request, Queue $queue)
+    public function update(UpdateLabQueueRequest $request, LabQueue $queue)
     {
         //
     }
@@ -76,10 +76,10 @@ class QueueController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Queue  $queue
+     * @param  \App\Models\LabQueue  $queue
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Queue $queue)
+    public function destroy(LabQueue $queue)
     {
         //
     }

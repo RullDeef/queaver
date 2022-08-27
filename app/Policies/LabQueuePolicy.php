@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Queue;
 use App\Models\User;
+use App\Models\LabQueue;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class QueuePolicy
+class LabQueuePolicy
 {
     use HandlesAuthorization;
 
@@ -18,19 +18,19 @@ class QueuePolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Queue  $queue
+     * @param  \App\Models\LabQueue  $queue
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Queue $queue)
+    public function view(User $user, LabQueue $queue)
     {
-        //
+        return true;
     }
 
     /**
@@ -41,54 +41,54 @@ class QueuePolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->isAdmin() || $user->isModerator();
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Queue  $queue
+     * @param  \App\Models\LabQueue  $queue
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Queue $queue)
+    public function update(User $user, LabQueue $queue)
     {
-        //
+        return $user->isAdmin() || $user->isModerator();
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Queue  $queue
+     * @param  \App\Models\LabQueue  $queue
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Queue $queue)
+    public function delete(User $user, LabQueue $queue)
     {
-        //
+        return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Queue  $queue
+     * @param  \App\Models\LabQueue  $queue
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Queue $queue)
+    public function restore(User $user, LabQueue $queue)
     {
-        //
+        return $user->isAdmin() || $user->isModerator();
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Queue  $queue
+     * @param  \App\Models\LabQueue  $queue
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Queue $queue)
+    public function forceDelete(User $user, LabQueue $queue)
     {
-        //
+        return $user->isAdmin();
     }
 }

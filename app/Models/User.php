@@ -45,4 +45,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'last_seen' => 'datetime',
     ];
+
+    public function isAdmin() {
+        return UserRole::for($this)->get()?->role === UserRole::ADMIN;
+    }
+
+    public function isModerator() {
+        return UserRole::for($this)->get()?->role === UserRole::MODERATOR;
+    }
 }
