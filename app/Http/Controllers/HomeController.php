@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LabQueue;
 use App\Models\User;
 
 class HomeController extends Controller
@@ -27,7 +28,12 @@ class HomeController extends Controller
 
         if (auth()->check()) {
             $mates = User::where('group_index', auth()->user()->group_index)->get();
-            $resp = $resp->with('groupmates', $mates);
+            $queues = LabQueue::all();
+
+            $resp = $resp->with([
+                'groupmates' => $mates,
+                'queues' => $queues,
+            ]);
         }
 
         return $resp;
