@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LabTaskController;
+use App\Http\Controllers\LabQueueController;
 use App\Http\Controllers\Auth\VerificationController;
 
 /*
@@ -24,3 +26,6 @@ Route::get('auth/verify/{id}/{hash}', [VerificationController::class, 'verify'])
 
 Route::redirect('/', 'home', 301);
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::resource('queue', LabQueueController::class)->middleware('auth');
+Route::resource('task', LabTaskController::class)->middleware('auth');

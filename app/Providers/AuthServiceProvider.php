@@ -3,6 +3,12 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+
+use App\Models\LabQueue;
+use App\Models\UserRole;
+use App\Policies\LabQueuePolicy;
+use App\Policies\UserRolePolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -14,8 +20,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-        'App\Models\LabQueue' => 'App\Policies\LabQueuePolicy',
-        'App\Models\UserRole' => 'App\Policies\UserRolePolicy',
+        LabQueue::class => LabQueuePolicy::class,
+        UserRole::class => UserRolePolicy::class,
     ];
 
     /**
@@ -26,7 +32,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        //
     }
 }

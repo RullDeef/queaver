@@ -36,6 +36,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
     ];
 
+    protected $appends = [
+        'online',
+    ];
+
     /**
      * The attributes that should be cast.
      *
@@ -46,11 +50,28 @@ class User extends Authenticatable implements MustVerifyEmail
         'last_seen' => 'datetime',
     ];
 
+    public function getOnlineAttribute()
+    {
+        return now()->lt($this->last_seen->addSeconds(config('user-online.expires_after')));
+    }
+
+    public function getSemesterAttribute()
+    {
+        ///TODO: implement
+        return 5;
+    }
+
+    public function getCourseAttribute()
+    {
+        ///TODO: implement
+        return 3;
+    }
+
     public function isAdmin() {
-        return UserRole::for($this)->get()?->role === UserRole::ADMIN;
+        return UserRole::for($this)->first()?->role === UserRole::ADMIN;
     }
 
     public function isModerator() {
-        return UserRole::for($this)->get()?->role === UserRole::MODERATOR;
+        return UserRole::for($this)->first()?->role === UserRole::MODERATOR;
     }
 }

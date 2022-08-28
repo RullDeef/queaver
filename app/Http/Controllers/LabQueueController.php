@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LabQueue;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use App\Http\Requests\StoreLabQueueRequest;
 use App\Http\Requests\UpdateLabQueueRequest;
-use App\Models\LabQueue;
 
 class LabQueueController extends Controller
 {
@@ -25,7 +27,8 @@ class LabQueueController extends Controller
      */
     public function create()
     {
-        //
+        Debugbar::error('queue create!');
+        return view('lab_queue.create');
     }
 
     /**
@@ -36,7 +39,23 @@ class LabQueueController extends Controller
      */
     public function store(StoreLabQueueRequest $request)
     {
-        //
+        Debugbar::info("storing lab queue");
+
+        $data = $request->validated();
+
+        if ($request->has('group_index_indifference'))
+            $data['group_index_indifference'] = true;
+        else
+            $data['group_index_indifference'] = false;
+
+        $queue = LabQueue::make($data);
+
+        $queue->creator_id = Auth::id();
+        $queue->save();
+
+        Debugbar::info($queue);
+
+        return redirect()->route('queue.show', ['queue' => $queue->id]);
     }
 
     /**
@@ -47,7 +66,7 @@ class LabQueueController extends Controller
      */
     public function show(LabQueue $queue)
     {
-        //
+        return view('lab_queue.show', compact('queue'));
     }
 
     /**
