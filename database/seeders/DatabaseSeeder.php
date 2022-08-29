@@ -3,9 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\UserRole;
 use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
-use Database\Seeders\QueueSeeder;
+use Illuminate\Support\Facades\DB;
+use Database\Seeders\LabTaskSeeder;
+use Database\Seeders\LabQueueSeeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,9 +20,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            UserSeeder::class,
-            QueueSeeder::class,
-        ]);
+        DB::transaction(function () {
+            // create special users
+            $this->createAdmins();
+
+            $this->call([
+                UserSeeder::class,
+                LabQueueSeeder::class,
+                LabTaskSeeder::class,
+            ]);
+        });
+    }
+
+    protected function createAdmins()
+    {
     }
 }

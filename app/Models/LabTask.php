@@ -18,6 +18,10 @@ class LabTask extends Model
         'creator_id',
     ];
 
+    protected $casts = [
+        'deadline' => 'date'
+    ];
+
     protected $append = ['outdated'];
 
     public function labQueue()

@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LabTask;
+use App\Models\LabQueue;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use App\Http\Requests\StoreLabTaskRequest;
 use App\Http\Requests\UpdateLabTaskRequest;
-use App\Models\LabTask;
+use Carbon\Carbon;
 
 class LabTaskController extends Controller
 {
@@ -16,7 +21,7 @@ class LabTaskController extends Controller
     public function index()
     {
         return view('lab_task.index')->with([
-            'labs' => LabTask::all(),
+            'tasks' => LabTask::all(),
         ]);
     }
 
@@ -25,9 +30,18 @@ class LabTaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('lab_task.create');
+        $res = view('lab_task.create')->with([
+            'queues' => LabQueue::all(),
+        ]);
+
+        if ($request->has('lab_queue_id'))
+            $res->with([
+                'lab_queue_id' => $request->input('lab_queue_id'),
+            ]);
+
+        return $res;
     }
 
     /**
@@ -38,29 +52,40 @@ class LabTaskController extends Controller
      */
     public function store(StoreLabTaskRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        $data['creator_id'] = Auth::id();
+
+        if ($request->input('deadline') !== '')
+        {
+            $deadline = Carbon::parse($request->input('deadline'));
+            Debugbar::debug("deadline: {$request->input('deadline')} -> $deadline");
+            $data['deadline'] = $deadline;
+        }
+
+        $task = LabTask::create($data);
+
+        return redirect()->route('task.show', compact('task'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\LabTask  $labTask
+     * @param  \App\Models\LabTask  $task
      * @return \Illuminate\Http\Response
      */
-    public function show(LabTask $labTask)
+    public function show(LabTask $task)
     {
-        return view('lab_task.show')->with([
-            'lab_task' => $labTask,
-        ]);
+        return view('lab_task.show', compact('task'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\LabTask  $labTask
+     * @param  \App\Models\LabTask  $task
      * @return \Illuminate\Http\Response
      */
-    public function edit(LabTask $labTask)
+    public function edit(LabTask $task)
     {
         //
     }
@@ -69,10 +94,10 @@ class LabTaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateLabTaskRequest  $request
-     * @param  \App\Models\LabTask  $labTask
+     * @param  \App\Models\LabTask  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateLabTaskRequest $request, LabTask $labTask)
+    public function update(UpdateLabTaskRequest $request, LabTask $task)
     {
         //
     }
@@ -83,7 +108,7 @@ class LabTaskController extends Controller
      * @param  \App\Models\LabTask  $labTask
      * @return \Illuminate\Http\Response
      */
-    public function destroy(LabTask $labTask)
+    public function destroy(LabTask $task)
     {
         //
     }

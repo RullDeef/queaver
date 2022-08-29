@@ -26,4 +26,9 @@ class LabQueue extends Model
             ownerKey: 'id'
         );
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(LabTask::class);
+    }
 }

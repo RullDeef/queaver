@@ -17,7 +17,9 @@ class LabQueueController extends Controller
      */
     public function index()
     {
-        //
+        return view('lab_queue.index')->with([
+            'queues' => LabQueue::all(),
+        ]);
     }
 
     /**
@@ -27,7 +29,6 @@ class LabQueueController extends Controller
      */
     public function create()
     {
-        Debugbar::error('queue create!');
         return view('lab_queue.create');
     }
 
@@ -39,8 +40,6 @@ class LabQueueController extends Controller
      */
     public function store(StoreLabQueueRequest $request)
     {
-        Debugbar::info("storing lab queue");
-
         $data = $request->validated();
 
         if ($request->has('group_index_indifference'))
@@ -53,9 +52,7 @@ class LabQueueController extends Controller
         $queue->creator_id = Auth::id();
         $queue->save();
 
-        Debugbar::info($queue);
-
-        return redirect()->route('queue.show', ['queue' => $queue->id]);
+        return redirect()->route('queue.show', compact('queue'));
     }
 
     /**

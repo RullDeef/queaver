@@ -14,24 +14,26 @@
                     </div>
 
                     <div class="col-3 container" v-for="queue in queues">
-                        <div class="card">
-                            <div class="card-header"></div>
-                            <div class="card-body">
-                                <h5 class="card-title text-center">{{ queue.name }}</h5>
+                        <a class="text-reset text-decoration-none"  :href="'queue/' + queue.id">
+                            <div class="card">
+                                <div class="card-header"></div>
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">{{  queue.name  }}</h5>
+                                </div>
+                                <div class="card-footer">
+                                    <div>6/20 people</div>
+                                    <!-- <div>04:39:15 for you</div>
+                                    <div>00:20:10 for everyone</div> -->
+                                </div>
                             </div>
-                            <div class="card-footer">
-                                <div>6/20 people</div>
-                                <div>04:39:15 for you</div>
-                                <div>00:20:10 for everyone</div>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
 
         </div>
         <div class="card-footer">
-            <button class="btn btn-primary" v-if="queues.length !== 0">my places</button>
+            <!-- <button class="btn btn-primary" v-if="queues.length !== 0">my places</button> -->
 
             <a class="btn btn-primary mx-3" v-if="canCreate" href="queue/create">create new</a>
         </div>
