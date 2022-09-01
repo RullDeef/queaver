@@ -1,15 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+    @include('partials.verify-email')
+
     <div class="container">
         <div class="row justify-content-center">
-            @unless(auth()->user()
-                ?->hasVerifiedEmail())
-                <div class="alert alert-warning" role="alert">
-                    <strong>{{ __('Warning') }}</strong> {{ __('Check your inbox for email verification link') }}
-                </div>
-            @endunless
-
             <div class="row">
                 <div class="col-9">
                     @if (session('status'))
@@ -23,7 +18,8 @@
                     </div>
 
                     <queue-preview @isset($queues) :queues="{{ $queues }}" @endisset
-                        :can-create="{{ Auth::user()->can('create', 'App\Models\LabQueue') }}" />
+                        @can('create', \App\LabQueue::class) :can-create="true" @endcan />
+
                 </div>
 
                 @isset($groupmates)

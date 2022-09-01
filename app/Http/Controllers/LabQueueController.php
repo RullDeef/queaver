@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\LabQueue;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\Debugbar\Facades\Debugbar;
@@ -63,7 +64,15 @@ class LabQueueController extends Controller
      */
     public function show(LabQueue $queue)
     {
-        return view('lab_queue.show', compact('queue'));
+        $queue->load([
+            'userPlaces',
+            'userPlaces.owner',
+            'userPlaces.labTask',
+            'tasks',
+        ]);
+        $me = User::find(Auth::id());
+        $taskStates = User::find(Auth::id())->taskStates->whereIn('lab_task_id', $queue->tasks);
+        return view('lab_queue.show', compact('queue', 'taskStates', 'me'));
     }
 
     /**

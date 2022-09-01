@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\UserTaskState;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -38,6 +39,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $appends = [
         'online',
+        'fullGroupIndex'
     ];
 
     /**
@@ -57,14 +59,31 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getSemesterAttribute()
     {
-        ///TODO: implement
-        return 5;
+        ///TODO: check if this is correct
+        $res = 2 * $this->course - 1;
+
+        if (now()->month < 6) {
+            $res += 1;
+        }
+
+        return $res;
     }
 
     public function getCourseAttribute()
     {
-        ///TODO: implement
-        return 3;
+        ///TODO: check if this is correct
+        $res = 4 - $this->graduation_year + now()->year;
+
+        if (now()->month > 6) {
+            $res++;
+        }
+
+        return $res;
+    }
+
+    public function getFullGroupIndexAttribute()
+    {
+        return 'ИУ7-' . $this->semester . $this->group_index;
     }
 
     public function isAdmin() {
@@ -73,5 +92,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isModerator() {
         return UserRole::for($this)->first()?->role === UserRole::MODERATOR;
+    }
+
+    public function places() {
+        return $this->hasMany(UserPlace::class);
+    }
+
+    public function taskStates() {
+        return $this->hasMany(UserTaskState::class);
     }
 }

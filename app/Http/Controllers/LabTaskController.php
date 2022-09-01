@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\LabTask;
 use App\Models\LabQueue;
+use App\Models\UserPlace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use App\Http\Requests\StoreLabTaskRequest;
 use App\Http\Requests\UpdateLabTaskRequest;
-use Carbon\Carbon;
 
 class LabTaskController extends Controller
 {
@@ -56,8 +57,7 @@ class LabTaskController extends Controller
 
         $data['creator_id'] = Auth::id();
 
-        if ($request->input('deadline') !== '')
-        {
+        if ($request->input('deadline') !== '') {
             $deadline = Carbon::parse($request->input('deadline'));
             Debugbar::debug("deadline: {$request->input('deadline')} -> $deadline");
             $data['deadline'] = $deadline;
@@ -76,7 +76,15 @@ class LabTaskController extends Controller
      */
     public function show(LabTask $task)
     {
-        return view('lab_task.show', compact('task'));
+        $params = compact('task');
+
+        if (Auth::check()) {
+            $params['place'] = UserPlace::where('user_id', Auth::id())->where('lab_task_id', $task->id)->first();
+        }
+
+        Debugbar::debug($params);
+
+        return view('lab_task.show', $params);
     }
 
     /**

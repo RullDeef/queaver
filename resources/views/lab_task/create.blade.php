@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    @include('partials.verify-email')
+
     <div class="container col-4">
         <h1>{{ __('Lab task creation') }}</h1>
 

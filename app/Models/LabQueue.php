@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\UserPlace;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LabQueue extends Model
 {
@@ -30,5 +31,10 @@ class LabQueue extends Model
     public function tasks()
     {
         return $this->hasMany(LabTask::class);
+    }
+
+    public function userPlaces()
+    {
+        return $this->hasMany(UserPlace::class);
     }
 }

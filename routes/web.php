@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LabTaskController;
 use App\Http\Controllers\LabQueueController;
+use App\Http\Controllers\UserPlaceController;
 use App\Http\Controllers\Auth\VerificationController;
 
 /*
@@ -29,3 +30,4 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::resource('queue', LabQueueController::class)->middleware('auth');
 Route::resource('task', LabTaskController::class)->middleware('auth');
+Route::resource('place', UserPlaceController::class)->middleware('auth');

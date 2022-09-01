@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    @include('partials.verify-email')
+
     <div class="container col-8 d-flex flex-wrap justify-content-begin">
         {{-- TODO: make sections for different courses (for admins) --}}
         @foreach ($queues as $queue)

@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    @include('partials.verify-email')
+
     <div class="container col-8 d-flex flex-wrap">
         {{-- TODO: make sections for each queue --}}
         @foreach ($tasks as $task)

@@ -23,7 +23,7 @@ class UserFactory extends Factory
             'surname' => fake()->lastName(),
             'email' => fake()->safeEmail(),
             'group_index' => fake()->numberBetween(1, 6),
-            'graduation_year' => fake()->numberBetween(now()->year, now()->year + 4),
+            'graduation_year' => fake()->numberBetween(now()->year + 1, now()->year + 4),
             'email_verified_at' => now(),
             'password' => Hash::make(fake()->password(minLength: 8, maxLength: 12)), // password
             'remember_token' => Str::random(10),
