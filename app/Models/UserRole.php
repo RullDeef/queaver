@@ -9,6 +9,9 @@ class UserRole extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'user_id';
+    public $incrementing = false;
+
     public const ADMIN = 'ADMIN';
     public const MODERATOR = 'MODERATOR';
 

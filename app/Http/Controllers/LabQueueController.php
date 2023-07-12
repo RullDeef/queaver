@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use App\Http\Requests\StoreLabQueueRequest;
 use App\Http\Requests\UpdateLabQueueRequest;
+use Illuminate\Http\Request;
 
 class LabQueueController extends Controller
 {
@@ -16,11 +17,15 @@ class LabQueueController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('lab_queue.index')->with([
-            'queues' => LabQueue::all(),
-        ]);
+        $queues = LabQueue::all();
+
+        if ($request->expectsJson()) {
+            return $queues;
+        }
+
+        return view('lab_queue.index')->with(compact('queues'));
     }
 
     /**
@@ -48,10 +53,12 @@ class LabQueueController extends Controller
         else
             $data['group_index_indifference'] = false;
 
-        $queue = LabQueue::make($data);
+        $data['creator_id'] = Auth::id();
+        $queue = LabQueue::create($data);
 
-        $queue->creator_id = Auth::id();
-        $queue->save();
+        if ($request->expectsJson()) {
+            return $queue;
+        }
 
         return redirect()->route('queue.show', compact('queue'));
     }
@@ -62,7 +69,7 @@ class LabQueueController extends Controller
      * @param  \App\Models\LabQueue  $queue
      * @return \Illuminate\Http\Response
      */
-    public function show(LabQueue $queue)
+    public function show(Request $request, LabQueue $queue)
     {
         $queue->load([
             'userPlaces',
@@ -70,6 +77,11 @@ class LabQueueController extends Controller
             'userPlaces.labTask',
             'tasks',
         ]);
+
+        if ($request->expectsJson()) {
+            return $queue;
+        }
+
         $me = User::find(Auth::id());
         $taskStates = User::find(Auth::id())->taskStates->whereIn('lab_task_id', $queue->tasks);
         return view('lab_queue.show', compact('queue', 'taskStates', 'me'));

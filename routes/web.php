@@ -30,4 +30,6 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::resource('queue', LabQueueController::class)->middleware('auth');
 Route::resource('task', LabTaskController::class)->middleware('auth');
+
+Route::post('place/done', [UserPlaceController::class, 'done'])->name('place.done');
 Route::resource('place', UserPlaceController::class)->middleware('auth');

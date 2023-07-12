@@ -11,11 +11,25 @@ class UserPlace extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'user_id';
+    public $incrementing = false;
+
     protected $fillable = [
         'user_id',
         'lab_queue_id',
         'lab_task_id',
     ];
+
+    /**
+     * Find UserPlace by composite primary key
+     */
+    public static function find(array $keys)
+    {
+        return UserPlace::where('user_id', $keys['user_id'])
+            ->where('lab_queue_id', $keys['lab_queue_id'])
+            ->where('lab_task_id', $keys['lab_task_id'])
+            ->first();
+    }
 
     public function owner()
     {

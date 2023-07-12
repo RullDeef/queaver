@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreUserPlaceRequest;
+use App\Models\LabTask;
+use App\Models\UserTaskState;
 use Illuminate\Support\Facades\Cookie;
 use RuntimeException;
 
@@ -19,12 +21,16 @@ class UserPlaceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (User::find(Auth::id())->isAdmin()) {
             $userPlaces = UserPlace::all();
         } else {
             $userPlaces = UserPlace::where('user_id', Auth::id())->get();
+        }
+
+        if ($request->expectsJson()) {
+            return $userPlaces;
         }
 
         return view('user_places.index', compact('userPlaces'));
@@ -48,10 +54,34 @@ class UserPlaceController extends Controller
      */
     public function store(StoreUserPlaceRequest $request)
     {
-        $data = $request->only(['user_id', 'lab_queue_id', 'lab_task_id']);
+        $data = $request->only(['lab_queue_id', 'lab_task_id']);
+
+        if ($request->has('user_id')) {
+            $data['user_id'] = $request->input('user_id');
+        } else {
+            $data['user_id'] = Auth::id();
+        }
         $userPlace = UserPlace::create($data);
 
+        if ($request->prefersJson()) {
+            return response()->json($userPlace, 201);
+        }
+
         return redirect()->back()->with('place', $userPlace);
+    }
+
+    public function done(Request $request)
+    {
+        $userPlace = UserPlace::find($request->only(['user_id', 'lab_queue_id', 'lab_task_id']));
+
+        // $userPlace->delete();
+        // UserTaskState::updateOrCreate(
+        //     $request->only(['user_id', 'lab_task_id']),
+        //     ['state' => UserTaskState::COMPLETED]
+        // );
+        Cookie::queue('done', true, 1);
+
+        return redirect()->back();
     }
 
     /**
@@ -60,9 +90,11 @@ class UserPlaceController extends Controller
      * @param  \App\Models\UserPlace  $userPlace
      * @return \Illuminate\Http\Response
      */
-    public function show(UserPlace $userPlace)
+    public function show(REquest $request, UserPlace $userPlace)
     {
-        //
+        if ($request->expectsJson()) {
+            return $userPlace;
+        }
     }
 
     /**
@@ -73,7 +105,6 @@ class UserPlaceController extends Controller
      */
     public function edit(UserPlace $userPlace)
     {
-        //
     }
 
     /**
@@ -85,7 +116,10 @@ class UserPlaceController extends Controller
      */
     public function update(Request $request, UserPlace $userPlace)
     {
-        //
+        return response()->json([
+            'request' => $request->all(),
+            'task' => $userPlace->user_id,
+        ]);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class LabTask extends Model
 {
@@ -22,7 +23,10 @@ class LabTask extends Model
         'deadline' => 'date'
     ];
 
-    protected $append = ['outdated'];
+    protected $appends = [
+        'outdated',
+        'state',
+    ];
 
     public function labQueue()
     {
@@ -37,5 +41,10 @@ class LabTask extends Model
     public function getOutdatedAttribute()
     {
         return now()->gt($this->deadline);
+    }
+
+    public function getStateAttribute()
+    {
+        return UserTaskState::where('user_id', Auth::id())->where('lab_task_id', $this->id)->first();
     }
 }

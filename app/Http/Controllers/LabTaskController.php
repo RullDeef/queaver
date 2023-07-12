@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use App\Http\Requests\StoreLabTaskRequest;
 use App\Http\Requests\UpdateLabTaskRequest;
+use App\Models\UserTaskState;
 
 class LabTaskController extends Controller
 {
@@ -19,8 +20,17 @@ class LabTaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->expectsJson()) {
+            $labQueueId = $request->query('lab_queue_id');
+            if ($labQueueId != null) {
+                $tasks = LabTask::where('lab_queue_id', $labQueueId)->get();
+                return $tasks;
+            }
+            return LabTask::all();
+        }
+
         return view('lab_task.index')->with([
             'tasks' => LabTask::all(),
         ]);
@@ -93,9 +103,8 @@ class LabTaskController extends Controller
      * @param  \App\Models\LabTask  $task
      * @return \Illuminate\Http\Response
      */
-    public function edit(LabTask $task)
+    public function edit(Request $request, LabTask $task)
     {
-        //
     }
 
     /**

@@ -87,6 +87,12 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
-        return redirect('home')->with(['must-verify' => true]);
+        if ($request->prefers('json')) {
+            return response()->json([
+                'token' => $user->createToken('api_user_token')->plainTextToken,
+            ]);
+        } else {
+            return redirect('home')->with(['must-verify' => true]);
+        }
     }
 }

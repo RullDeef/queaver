@@ -19,6 +19,7 @@
     "dependencies": {
         "@vitejs/plugin-vue": "^3.0.3",
         "bootstrap-icons": "^1.9.1",
-        "vue": "^3.2.36"
+        "vue": "^3.2.36",
+        "vue-cookies": "^1.8.1"
     }
 }

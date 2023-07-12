@@ -25,10 +25,23 @@
 
             <div class="col-4">
                 <!-- show big green sumbit button to complete task when user is first in queue -->
-                <div class="alert alert-success" role="alert">
+                <div class="alert alert-success" role="alert" v-if="queue.user_places[0].user_id === me.id">
                     <strong>You are the first no this queue!</strong>
                     <p>To mark your lab completed click on the button below</p>
-                    <a class="btn btn-success" href="#">complete lab</a>
+                    <form method="post" action="/place/done">
+                        <input type="hidden" name="_token" :value="csrfToken">
+                        <input type="hidden" name="user_id" :value="queue.user_places[0].user_id">
+                        <input type="hidden" name="lab_queue_id" :value="queue.user_places[0].lab_queue_id">
+                        <input type="hidden" name="lab_task_id" :value="queue.user_places[0].lab_task_id">
+                        <input type="submit" class="btn btn-success"
+                            :value="'complete lab №' + queue.user_places[0].lab_task.index" />
+                    </form>
+                </div>
+
+                {{ myTaskIsDone() }}
+                <div class="alert alert-success" v-if="myTaskIsDone()">
+                    <strong>Success!</strong>
+                    <p>Lab marked as completed!</p>
                 </div>
 
                 <user-place-list :userPlaces="queue.user_places" :me="me" />
@@ -62,7 +75,11 @@ export default {
         canCreateLabTasks: {
             type: Boolean,
             default: false
-        }
+        },
+        csrfToken: {
+            type: String,
+            required: true
+        },
     },
     computed: {
         myPlaces() {
@@ -73,8 +90,13 @@ export default {
         },
         tasksDone() {
             return this.myTaskStates.filter(t => t.state === 'COMPLETED').map(t => t.id);
-        }
+        },
     },
+    methods: {
+        myTaskIsDone() {
+            return this.$cookies.isKey('done');
+        },
+    }
 }
 </script>
 

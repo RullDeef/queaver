@@ -4,5 +4,6 @@
     @include('partials.verify-email')
 
     <lab-queue-viewer :me="{{ $me }}" :queue="{{ $queue }}" :my-task-states="{{ $taskStates }}"
-        @can('create', \App\LabTask::class) :can-create-lab-tasks="true" @endcan />
+        @can('create', \App\LabTask::class) :can-create-lab-tasks="true" @endcan
+        csrf-token="{{ csrf_token() }}" />
 @endsection
